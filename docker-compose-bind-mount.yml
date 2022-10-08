@@ -27,6 +27,8 @@ services:
       GATEWAY_ADMIN_PASSWORD: password
       ACCEPT_IGNITION_EULA: "Y"
       IGNITION_EDITION: standard
+      TZ: America/Bogota  # see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+
     # Use depends_on to only launch this container if our init container exits cleanly
     depends_on:
       init-gateway:
