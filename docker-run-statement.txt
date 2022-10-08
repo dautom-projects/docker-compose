@@ -1,0 +1,12 @@
+docker run -d -p 8488:8088 `
+	--name dau_ind_upgrade_testing `
+	-v 'D:\OneDrive - DAUTOM S.A.S\Archivos\Ignition\Data\DAU-InD-Upgrade-Testing\Projects\:/usr/local/bin/ignition/data/projects' `
+	-v gw_dau_ind_upgrade_testing_data:/usr/local/bin/ignition/data `
+	-e ACCEPT_IGNITION_EULA=Y `
+	-e GATEWAY_ADMIN_USERNAME=admin `
+	-e GATEWAY_ADMIN_PASSWORD=password `
+	-e IGNITION_EDITION=full `
+	-e TZ=America/Bogota `
+	inductiveautomation/ignition:8.1.12 `
+	-n gw_dau_ind_upgrade_testing `
+	-a localhost -h 8488 -s 8443 
