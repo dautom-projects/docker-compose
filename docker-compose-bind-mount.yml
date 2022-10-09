@@ -24,14 +24,19 @@ services:
     volumes:
       - ./gateway-data:/usr/local/bin/ignition/data
     environment:
-      GATEWAY_ADMIN_PASSWORD: password
+      GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
       ACCEPT_IGNITION_EULA: "Y"
       IGNITION_EDITION: standard
       TZ: America/Bogota  # see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
-
+    secrets:
+      - gateway-admin-password
     # Use depends_on to only launch this container if our init container exits cleanly
     depends_on:
       init-gateway:
         condition: service_completed_successfully
     command: >
       -n dau_ind_name
+
+secrets:
+  gateway-admin-password:
+    file: secrets/GATEWAY_ADMIN_PASSWORD_FILE
