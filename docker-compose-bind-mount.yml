@@ -8,6 +8,8 @@ services:
       # We mount this in the container as `/data` to not conflict with built-in files
       # at `/usr/local/bin/ignition/data`
       - ./gateway-data:/data
+    networks:
+      - network
     command:
       # Seed the files from the image to our /data if marker file not present, skip
       # if the marker file exists (and implicitly exit cleanly with status code 0)
@@ -49,7 +51,10 @@ services:
       - network
     environment:
       MYSQL_ROOT_PASSWORD: password
-    
+      MYSQL_DATABASE: plant 
+      MYSQL_USER: dautom
+      MYSQL_PASSWORD: password
+      
 secrets:
   gateway-admin-password:
     file: secrets/GATEWAY_ADMIN_PASSWORD_FILE
