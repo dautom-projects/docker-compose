@@ -23,6 +23,8 @@ services:
       - 8143:8043
     volumes:
       - ./gateway-data:/usr/local/bin/ignition/data
+    networks:
+      - network  
     environment:
       GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
       ACCEPT_IGNITION_EULA: "Y"
@@ -37,6 +39,23 @@ services:
     command: >
       -n dau_ind_name
 
+  db:
+    image: mysql:latest
+    ports:
+      - 3307:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - network
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    
 secrets:
   gateway-admin-password:
     file: secrets/GATEWAY_ADMIN_PASSWORD_FILE
+
+volumes:
+  mysql_data:
+
+networks:
+  network:
