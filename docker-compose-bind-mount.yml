@@ -8,6 +8,8 @@ services:
       # We mount this in the container as `/data` to not conflict with built-in files
       # at `/usr/local/bin/ignition/data`
       - ./gateway-data:/data
+    networks:
+      - network
     command:
       # Seed the files from the image to our /data if marker file not present, skip
       # if the marker file exists (and implicitly exit cleanly with status code 0)
@@ -23,6 +25,8 @@ services:
       - 8143:8043
     volumes:
       - ./gateway-data:/usr/local/bin/ignition/data
+    networks:
+      - network  
     environment:
       GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
       ACCEPT_IGNITION_EULA: "Y"
@@ -37,6 +41,36 @@ services:
     command: >
       -n dau_ind_name
 
+  db:
+    image: mysql:latest
+    ports:
+      - 3307:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - network
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: run/secrets/db-root-password
+      MYSQL_DATABASE: plant 
+      MYSQL_USER_FILE: run/secrets/db-user
+      MYSQL_PASSWORD_FILE: run/secrets/db-user-password
+    secrets:
+      - db-root-password
+      - db-user
+      - db-user-password
+      
 secrets:
   gateway-admin-password:
     file: secrets/GATEWAY_ADMIN_PASSWORD_FILE
+  db-root-password:
+    file: secrets/DB_ROOT_PASSWORD_FILE
+  db-user:
+    file: secrets/DB_USER_FILE
+  db-user-password:
+    file: secrets/DB_USER_PASSWORD_FILE
+
+volumes:
+  mysql_data:
+
+networks:
+  network:
