@@ -52,16 +52,22 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD_FILE: run/secrets/db-root-password
       MYSQL_DATABASE: plant 
-      MYSQL_USER: dautom
-      MYSQL_PASSWORD: password
+      MYSQL_USER_FILE: run/secrets/db-user
+      MYSQL_PASSWORD_FILE: run/secrets/db-user-password
     secrets:
       - db-root-password
+      - db-user
+      - db-user-password
       
 secrets:
   gateway-admin-password:
     file: secrets/GATEWAY_ADMIN_PASSWORD_FILE
   db-root-password:
     file: secrets/DB_ROOT_PASSWORD_FILE
+  db-user:
+    file: secrets/DB_USER_FILE
+  db-user-password:
+    file: secrets/DB_USER_PASSWORD_FILE
 
 volumes:
   mysql_data:
