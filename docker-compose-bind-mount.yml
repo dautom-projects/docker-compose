@@ -25,6 +25,7 @@ services:
     ports:
       - 8188:8088
       - 8143:8043
+      - 8160:8060
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -67,6 +68,7 @@ services:
     ports:
       - 8288:8088
       - 8243:8043
+      - 8260:8060
     volumes:
       - ./gateway-data-standby:/usr/local/bin/ignition/data
     networks:
