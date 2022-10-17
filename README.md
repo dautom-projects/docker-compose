@@ -12,11 +12,11 @@ To deploy this project run
 ```
 
 
-## Features
+## Tags & Features
 
-- v1.0 - Docker compose file for Ignition
-- v1.1 - Docker compose file for Ignition with secrets
-- v2.0 - Docker compose file for Ignition with MySQL and secrets
+- v1.1.0 - Yalm file for Ignition
+- v1.1.1 - Yalm file for Ignition with secrets
+- v1.2.0 - Yalm file for Ignition with MySQL and secrets
 
 
 
