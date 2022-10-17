@@ -1,13 +1,14 @@
 # Example shown in the session for bind-mount with init container via Docker Compose
 ---
 services:
-  init-gateway:
+  init-gateway-active:
+    container_name: ignition-active-init
     image: inductiveautomation/ignition:latest
     entrypoint: sh -c
     volumes:
       # We mount this in the container as `/data` to not conflict with built-in files
       # at `/usr/local/bin/ignition/data`
-      - ./gateway-data:/data
+      - ./gateway-data-active:/data
     networks:
       - network
     command:
@@ -18,13 +19,14 @@ services:
           touch /data/.ignition-seed-complete ;
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
-  gateway:
+  gateway-active:
+    container_name: ignition-active
     image: inductiveautomation/ignition:latest
     ports:
       - 8188:8088
       - 8143:8043
     volumes:
-      - ./gateway-data:/usr/local/bin/ignition/data
+      - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
       - network  
     environment:
@@ -36,17 +38,60 @@ services:
       - gateway-admin-password
     # Use depends_on to only launch this container if our init container exits cleanly
     depends_on:
-      init-gateway:
+      init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n dau_ind_name
+      -n gw_active
+
+  init-gateway-standby:
+    container_name: ignition-standby-init
+    image: inductiveautomation/ignition:latest
+    entrypoint: sh -c
+    volumes:
+      # We mount this in the container as `/data` to not conflict with built-in files
+      # at `/usr/local/bin/ignition/data`
+      - ./gateway-data-standby:/data
+    networks:
+      - network
+    command:
+      # Seed the files from the image to our /data if marker file not present, skip
+      # if the marker file exists (and implicitly exit cleanly with status code 0)
+      - |
+        if [ ! -f /data/.ignition-seed-complete ]; then
+          touch /data/.ignition-seed-complete ;
+          cp -dpR /usr/local/bin/ignition/data/* /data/ ;
+        fi
+  gateway-standby:
+    container_name: ignition-standby
+    image: inductiveautomation/ignition:latest
+    ports:
+      - 8288:8088
+      - 8243:8043
+    volumes:
+      - ./gateway-data-standby:/usr/local/bin/ignition/data
+    networks:
+      - network  
+    environment:
+      GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
+      ACCEPT_IGNITION_EULA: "Y"
+      IGNITION_EDITION: standard
+      TZ: America/Bogota  # see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+    secrets:
+      - gateway-admin-password
+    # Use depends_on to only launch this container if our init container exits cleanly
+    depends_on:
+      init-gateway-standby:
+        condition: service_completed_successfully
+    command: >
+      -n gw_standby
 
   db:
+    container_name: mysql-active
     image: mysql:latest
     ports:
       - 3307:3306
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data_active:/var/lib/mysql
     networks:
       - network
     environment:
@@ -70,7 +115,9 @@ secrets:
     file: secrets/DB_USER_PASSWORD_FILE
 
 volumes:
-  mysql_data:
+  mysql_data_active:
+    name: mysql-data-active
 
 networks:
   network:
+    name: deployment-network
