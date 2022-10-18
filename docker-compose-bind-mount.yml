@@ -1,7 +1,8 @@
 # Example shown in the session for bind-mount with init container via Docker Compose
 ---
 services:
-  init-gateway:
+  init-gateway-active:
+    container_name: ignition-active-init
     image: inductiveautomation/ignition:latest
     entrypoint: sh -c
     volumes:
@@ -18,13 +19,15 @@ services:
           touch /data/.ignition-seed-complete ;
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
-  gateway:
+  gateway-active:
+    container_name: ignition-active
     image: inductiveautomation/ignition:latest
     ports:
       - 8188:8088
       - 8143:8043
+      - 8160:8060
     volumes:
-      - ./gateway-data:/usr/local/bin/ignition/data
+      - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
       - network  
     environment:
@@ -39,14 +42,15 @@ services:
       init-gateway:
         condition: service_completed_successfully
     command: >
-      -n dau_ind_name
+      -n gw-active
 
   db:
+    container_name: mysql-active
     image: mysql:latest
     ports:
       - 3307:3306
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql-data-active:/var/lib/mysql
     networks:
       - network
     environment:
@@ -70,7 +74,9 @@ secrets:
     file: secrets/DB_USER_PASSWORD_FILE
 
 volumes:
-  mysql_data:
+  mysql-data-active:
+    name: mysql-data-active
 
 networks:
   network:
+    name: deployment-network  
