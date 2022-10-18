@@ -8,7 +8,7 @@ services:
     volumes:
       # We mount this in the container as `/data` to not conflict with built-in files
       # at `/usr/local/bin/ignition/data`
-      - ./gateway-data:/data
+      - ./gateway-data-active:/data
     networks:
       - network
     command:
@@ -39,7 +39,7 @@ services:
       - gateway-admin-password
     # Use depends_on to only launch this container if our init container exits cleanly
     depends_on:
-      init-gateway:
+      init-gateway-active:
         condition: service_completed_successfully
     command: >
       -n gw-active
