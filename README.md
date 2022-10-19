@@ -17,6 +17,7 @@ To deploy this project run
 - v1.1.0 - Yalm file for Ignition
 - v1.1.1 - Yalm file for Ignition with secrets
 - v1.2.0 - Yalm file for Ignition with MySQL and secrets
+- v1.2.1 - Yalm file for Ignition and MySQL with secrets. Volume and network named.
 - v1.3.0 - Yalm file for Ignition with redundancy and MySQL active
 
 
