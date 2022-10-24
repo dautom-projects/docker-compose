@@ -2,7 +2,7 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-active-init
+    container_name: ignition-yield-calculator-init
     image: inductiveautomation/ignition:latest
     entrypoint: sh -c
     volumes:
@@ -20,13 +20,13 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-active
+    container_name: ignition-yield-calculator
     image: inductiveautomation/ignition:latest
     ports:
-      - 8188:8088
-      - 8143:8043
-      - 8160:8060
-      - 1884:1883
+      - 8288:8088
+      - 8243:8043
+      - 8260:8060
+      - 1885:1883
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -43,13 +43,13 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-active
+      -n gw-dau-rd-yield-calculator
 
   db:
-    container_name: mysql-active
+    container_name: mysql-yield-calculator
     image: mysql:latest
     ports:
-      - 3307:3306
+      - 3308:3306
     volumes:
       - mysql-data-active:/var/lib/mysql
     networks:
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-data-active
+    name: mysql-data-yield-calculator
 
 networks:
   network:
-    name: deployment-network  
+    name: deployment-network-yield-calculator  
