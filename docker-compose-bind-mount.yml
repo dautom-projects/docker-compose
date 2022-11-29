@@ -1,14 +1,14 @@
 # Example shown in the session for bind-mount with init container via Docker Compose
 ---
 services:
-  init-gateway:
-    container_name: ignition-init
+  init-gateway-hub:
+    container_name: ignition-hub-init
     image: inductiveautomation/ignition:latest
     entrypoint: sh -c
     volumes:
       # We mount this in the container as `/data` to not conflict with built-in files
       # at `/usr/local/bin/ignition/data`
-      - ./gateway-data:/data
+      - ./gateway-data-hub:/data
     command:
       # Seed the files from the image to our /data if marker file not present, skip
       # if the marker file exists (and implicitly exit cleanly with status code 0)
@@ -17,14 +17,52 @@ services:
           touch /data/.ignition-seed-complete ;
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
-  gateway:
-    container_name: ignition
+  gateway-hub:
+    container_name: ignition-hub
     image: inductiveautomation/ignition:latest
     ports:
       - 9188:8088
       - 9143:8043
     volumes:
-      - ./gateway-data:/usr/local/bin/ignition/data
+      - ./gateway-data-hub:/usr/local/bin/ignition/data
+    environment:
+      GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
+      ACCEPT_IGNITION_EULA: "Y"
+      IGNITION_EDITION: full
+      TZ: America/Bogota  # see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+    secrets:
+      - gateway-admin-password
+    # Use depends_on to only launch this container if our init container exits cleanly
+    depends_on:
+      init-gateway-hub:
+        condition: service_completed_successfully
+    command: >
+      -n gw-dau-rd-hub-name
+
+  init-gateway-spoke:
+    container_name: ignition-spoke-init
+    image: inductiveautomation/ignition:latest
+    entrypoint: sh -c
+    volumes:
+      # We mount this in the container as `/data` to not conflict with built-in files
+      # at `/usr/local/bin/ignition/data`
+      - ./gateway-data-spoke:/data
+    command:
+      # Seed the files from the image to our /data if marker file not present, skip
+      # if the marker file exists (and implicitly exit cleanly with status code 0)
+      - |
+        if [ ! -f /data/.ignition-seed-complete ]; then
+          touch /data/.ignition-seed-complete ;
+          cp -dpR /usr/local/bin/ignition/data/* /data/ ;
+        fi
+  gateway-spoke:
+    container_name: ignition-spoke
+    image: inductiveautomation/ignition:latest
+    ports:
+      - 9288:8088
+      - 9243:8043
+    volumes:
+      - ./gateway-data-spoke:/usr/local/bin/ignition/data
     environment:
       GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
       ACCEPT_IGNITION_EULA: "Y"
@@ -34,10 +72,10 @@ services:
       - gateway-admin-password
     # Use depends_on to only launch this container if our init container exits cleanly
     depends_on:
-      init-gateway:
+      init-gateway-spoke:
         condition: service_completed_successfully
     command: >
-      -n gw-dau_rd_name
+      -n gw-dau-rd-spoke-name
 
 secrets:
   gateway-admin-password:
