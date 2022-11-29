@@ -2,6 +2,7 @@
 ---
 services:
   init-gateway:
+    container_name: ignition-init
     image: inductiveautomation/ignition:latest
     entrypoint: sh -c
     volumes:
@@ -17,16 +18,17 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway:
+    container_name: ignition
     image: inductiveautomation/ignition:latest
     ports:
-      - 8188:8088
-      - 8143:8043
+      - 9188:8088
+      - 9143:8043
     volumes:
       - ./gateway-data:/usr/local/bin/ignition/data
     environment:
       GATEWAY_ADMIN_PASSWORD_FILE: /run/secrets/gateway-admin-password
       ACCEPT_IGNITION_EULA: "Y"
-      IGNITION_EDITION: standard
+      IGNITION_EDITION: edge
       TZ: America/Bogota  # see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
     secrets:
       - gateway-admin-password
@@ -35,7 +37,7 @@ services:
       init-gateway:
         condition: service_completed_successfully
     command: >
-      -n dau_ind_name
+      -n gw-dau_rd_name
 
 secrets:
   gateway-admin-password:
