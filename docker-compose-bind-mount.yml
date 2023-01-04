@@ -2,7 +2,8 @@
 ---
 services:
   init-gateway:
-    image: inductiveautomation/ignition:latest
+    container_name: ignition-bus-cienaga-oro-init
+    image: inductiveautomation/ignition:8.1.16
     entrypoint: sh -c
     volumes:
       # We mount this in the container as `/data` to not conflict with built-in files
@@ -19,10 +20,11 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway:
-    image: inductiveautomation/ignition:latest
+    container_name: ignition-bus-cienaga-oro
+    image: inductiveautomation/ignition:8.1.16
     ports:
-      - 8188:8088
-      - 8143:8043
+      - 8488:8088
+      - 8443:8043
     volumes:
       - ./gateway-data:/usr/local/bin/ignition/data
     networks:
@@ -39,12 +41,13 @@ services:
       init-gateway:
         condition: service_completed_successfully
     command: >
-      -n dau_ind_name
+      -n bus-cienaga-oro
 
   db:
+    container_name: mysql-bus-cienaga-oro
     image: mysql:latest
     ports:
-      - 3307:3306
+      - 3309:3306
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -71,6 +74,8 @@ secrets:
 
 volumes:
   mysql_data:
+    name: bus-mysql-data
 
 networks:
   network:
+    name: bus-network
