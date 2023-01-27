@@ -2,7 +2,7 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-yield-calculator-init
+    container_name: ignition-downtime-init
     image: inductiveautomation/ignition:8.1.21
     entrypoint: sh -c
     volumes:
@@ -20,13 +20,13 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-yield-calculator
+    container_name: ignition-downtime
     image: inductiveautomation/ignition:8.1.21
     ports:
-      - 8288:8088
-      - 8243:8043
-      - 8260:8060
-      - 1885:1883
+      - 8588:8088
+      - 8543:8043
+      - 8560:8060
+      - 1888:1883
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -43,13 +43,13 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-dau-rd-yield-calculator
+      -n gw-dau-rd-downtime
 
   db:
-    container_name: mysql-yield-calculator
+    container_name: mysql-downtime
     image: mysql:latest
     ports:
-      - 3308:3306
+      - 3311:3306
     volumes:
       - mysql-data-active:/var/lib/mysql
     networks:
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-data-yield-calculator
+    name: mysql-data-downtime
 
 networks:
   network:
-    name: deployment-network-yield-calculator  
+    name: deployment-network-downtime
