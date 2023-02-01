@@ -2,8 +2,8 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-downtime-init
-    image: inductiveautomation/ignition:8.1.21
+    container_name: ignition-rd-fc-demo-init
+    image: inductiveautomation/ignition:latest
     entrypoint: sh -c
     volumes:
       # We mount this in the container as `/data` to not conflict with built-in files
@@ -20,13 +20,13 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-downtime
-    image: inductiveautomation/ignition:8.1.21
+    container_name: ignition-rd-fc-demo
+    image: inductiveautomation/ignition:latest
     ports:
-      - 8588:8088
-      - 8543:8043
-      - 8560:8060
-      - 1888:1883
+      - 8688:8088
+      - 8643:8043
+      - 8660:8060
+      - 1889:1883
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -43,13 +43,13 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-dau-rd-downtime
+      -n gw-dau-rd-fc-demo
 
   db:
-    container_name: mysql-downtime
+    container_name: mysql-rd-fc-demo
     image: mysql:latest
     ports:
-      - 3311:3306
+      - 3312:3306
     volumes:
       - mysql-data-active:/var/lib/mysql
     networks:
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-data-downtime
+    name: mysql-data-rd-fc-demo
 
 networks:
   network:
-    name: deployment-network-downtime
+    name: deployment-network-rd-fc-demo
