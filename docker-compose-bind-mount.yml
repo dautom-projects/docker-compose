@@ -2,7 +2,7 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-rd-fc-demo-init
+    container_name: ignition-rd-fc-demo-intake-init
     image: inductiveautomation/ignition:latest
     entrypoint: sh -c
     volumes:
@@ -20,7 +20,7 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-rd-fc-demo
+    container_name: ignition-rd-fc-demo-intake
     image: inductiveautomation/ignition:latest
     ports:
       - 8688:8088
@@ -43,10 +43,10 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-dau-rd-fc-demo
+      -n gw-dau-rd-fc-demo-intake
 
   db:
-    container_name: mysql-rd-fc-demo
+    container_name: mysql-rd-fc-demo-intake
     image: mysql:latest
     ports:
       - 3312:3306
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-data-rd-fc-demo
+    name: mysql-data-rd-fc-demo-intake
 
 networks:
   network:
-    name: deployment-network-rd-fc-demo
+    name: deployment-network-rd-fc-demo-intake
