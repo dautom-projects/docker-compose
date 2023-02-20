@@ -2,7 +2,7 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-downtime-init
+    container_name: ignition-core-test-init
     image: inductiveautomation/ignition:8.1.21
     entrypoint: sh -c
     volumes:
@@ -20,13 +20,13 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-downtime
+    container_name: ignition-core-test
     image: inductiveautomation/ignition:8.1.21
     ports:
-      - 8588:8088
-      - 8543:8043
-      - 8560:8060
-      - 1888:1883
+      - 8788:8088
+      - 8743:8043
+      - 8760:8060
+      - 1890:1883
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -43,13 +43,13 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-dau-rd-downtime
+      -n gw-dau-ignition-core-test
 
   db:
-    container_name: mysql-downtime
+    container_name: mysql-ignition-core-test
     image: mysql:latest
     ports:
-      - 3311:3306
+      - 3313:3306
     volumes:
       - mysql-data-active:/var/lib/mysql
     networks:
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-data-downtime
+    name: mysql-ignition-core-test
 
 networks:
   network:
-    name: deployment-network-downtime
+    name: deployment-ignition-core-test
