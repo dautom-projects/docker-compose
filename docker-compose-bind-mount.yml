@@ -2,7 +2,7 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-core-test-init
+    container_name: ignition-ems-init
     image: inductiveautomation/ignition:8.1.21
     entrypoint: sh -c
     volumes:
@@ -20,13 +20,13 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-core-test
+    container_name: ignition-ems
     image: inductiveautomation/ignition:8.1.21
     ports:
-      - 8788:8088
-      - 8743:8043
-      - 8760:8060
-      - 1890:1883
+      - 8888:8088
+      - 8843:8043
+      - 8860:8060
+      - 1891:1883
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -43,13 +43,13 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-dau-ignition-core-test
+      -n gw-dau-rd-ems
 
   db:
-    container_name: mysql-ignition-core-test
+    container_name: mysql-ems
     image: mysql:latest
     ports:
-      - 3313:3306
+      - 3314:3306
     volumes:
       - mysql-data-active:/var/lib/mysql
     networks:
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-ignition-core-test
+    name: mysql-data-ems
 
 networks:
   network:
-    name: deployment-ignition-core-test
+    name: deployment-network-ems
