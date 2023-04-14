@@ -3,7 +3,7 @@
 services:
   init-gateway-active:
     container_name: ignition-mat-fc-ems-ava-init
-    image: inductiveautomation/ignition:8.1.21
+    image: inductiveautomation/ignition:8.1.26
     entrypoint: sh -c
     volumes:
       # We mount this in the container as `/data` to not conflict with built-in files
@@ -21,12 +21,12 @@ services:
         fi
   gateway-active:
     container_name: ignition-mat-fc-ems-ava
-    image: inductiveautomation/ignition:8.1.21
+    image: inductiveautomation/ignition:8.1.26
     ports:
-      - 8788:8088
-      - 8743:8043
-      - 8760:8060
-      - 1791:1883
+      - 8488:8088
+      - 8443:8043
+      - 8460:8060
+      - 1887:1883
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -49,7 +49,7 @@ services:
     container_name: mysql-mat-fc-ems-ava
     image: mysql:latest
     ports:
-      - 3714:3306
+      - 3310:3306
     volumes:
       - mysql-data-active:/var/lib/mysql
     networks:
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-data-mat-fc-ems-ava
+    name: mysql-data-mat-fc-ems
 
 networks:
   network:
-    name: deployment-network-mat-fc-ems-ava
+    name: deployment-network-mat-fc-ems
