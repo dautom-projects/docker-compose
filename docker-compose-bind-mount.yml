@@ -2,7 +2,7 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-ems-global-init
+    container_name: ignition-dau-fc-ems-global-init
     image: inductiveautomation/ignition:8.1.26
     entrypoint: sh -c
     volumes:
@@ -20,7 +20,7 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-ems-global
+    container_name: ignition-dau-fc-ems-global
     image: inductiveautomation/ignition:8.1.26
     ports:
       - 8188:8088
@@ -43,10 +43,10 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-dau-rd-ems-global
+      -n gw-dau-fc-ems-global
 
   db:
-    container_name: mysql-ems-global
+    container_name: mysql-dau-fc-ems-global
     image: mysql:latest
     ports:
       - 3307:3306
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-data-ems-global
+    name: mysql-data-dau-ems-global
 
 networks:
   network:
-    name: deployment-network-ems-global
+    name: deployment-network-dau-ems-global
