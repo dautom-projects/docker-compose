@@ -2,8 +2,8 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-downtime-init
-    image: inductiveautomation/ignition:8.1.21
+    container_name: ignition-dau-fc-ems-ava-init
+    image: inductiveautomation/ignition:8.1.27
     entrypoint: sh -c
     volumes:
       # We mount this in the container as `/data` to not conflict with built-in files
@@ -20,8 +20,8 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-downtime
-    image: inductiveautomation/ignition:8.1.21
+    container_name: ignition-dau-fc-ems-ava
+    image: inductiveautomation/ignition:8.1.27
     ports:
       - 8588:8088
       - 8543:8043
@@ -43,10 +43,10 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-dau-rd-downtime
+      -n gw-dau-fc-ems-ava
 
   db:
-    container_name: mysql-downtime
+    container_name: mysql-dau-fc-ems-ava
     image: mysql:latest
     ports:
       - 3311:3306
@@ -76,8 +76,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-data-downtime
+    name: mysql-data-dau-fc-ems
 
 networks:
   network:
-    name: deployment-network-downtime
+    name: deployment-network-dau-fc-ems
