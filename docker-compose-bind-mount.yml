@@ -2,7 +2,7 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-active-init
+    container_name: ignition-dau-rd-mes-init
     image: inductiveautomation/ignition:8.1.37
     entrypoint: sh -c
     volumes:
