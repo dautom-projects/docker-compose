@@ -2,7 +2,7 @@
 ---
 services:
   init-gateway-active:
-    container_name: ignition-dau-rd-mes-init
+    container_name: ignition-dau-rd-mes-base-init
     image: inductiveautomation/ignition:8.1.42
     entrypoint: sh -c
     volumes:
@@ -20,14 +20,14 @@ services:
           cp -dpR /usr/local/bin/ignition/data/* /data/ ;
         fi
   gateway-active:
-    container_name: ignition-dau-rd-mes
+    container_name: ignition-dau-rd-mes-base
     image: inductiveautomation/ignition:8.1.42
     ports:
-      - 8788:8088
-      - 8743:8043
-      - 8760:8060
-      - 8713:1883
-      - 8783:8883
+      - 9588:8088
+      - 9543:8043
+      - 9560:8060
+      - 9513:1883
+      - 9583:8883
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -44,13 +44,13 @@ services:
       init-gateway-active:
         condition: service_completed_successfully
     command: >
-      -n gw-dau-rd-mes
+      -n gw-dau-rd-mes-base
 
   db:
-    container_name: mysql-dau-rd-mes
+    container_name: mysql-dau-rd-mes-base
     image: mysql:latest
     ports:
-      - 8706:3306
+      - 9506:3306
     volumes:
       - mysql-data-active:/var/lib/mysql
     networks:
@@ -77,8 +77,8 @@ secrets:
 
 volumes:
   mysql-data-active:
-    name: mysql-dau-rd-mes
+    name: mysql-dau-rd-mes-base
 
 networks:
   network:
-    name: deployment-dau-rd-mes
+    name: deployment-dau-rd-mes-base
