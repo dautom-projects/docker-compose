@@ -26,7 +26,8 @@ services:
       - 8788:8088
       - 8743:8043
       - 8760:8060
-      - 1890:1883
+      - 8713:1883
+      - 8783:8883
     volumes:
       - ./gateway-data-active:/usr/local/bin/ignition/data
     networks:
@@ -49,7 +50,7 @@ services:
     container_name: mysql-dau-rd-mes
     image: mysql:latest
     ports:
-      - 3313:3306
+      - 8706:3306
     volumes:
       - mysql-data-active:/var/lib/mysql
     networks:
